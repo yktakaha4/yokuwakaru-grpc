@@ -3,7 +3,7 @@
 https://booth.pm/ja/items/1557285
 
 ```
-$ make server
+$ make server port=50051
 
 $ make client message=hoge
 ```

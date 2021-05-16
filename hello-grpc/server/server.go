@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"net"
+	"os"
 	"time"
 
 	"github.com/golang/protobuf/ptypes/duration"
@@ -41,7 +42,8 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func main() {
-	addr := ":50051"
+	port := os.Args[1]
+	addr := ":" + port
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
