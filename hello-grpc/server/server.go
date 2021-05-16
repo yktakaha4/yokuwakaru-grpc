@@ -2,17 +2,25 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net"
 
 	pb "github.com/yktakaha4/yokuwakaru-grpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type server struct{}
 
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.Name)
+	if in.Name == "go-error" {
+		return nil, errors.New("test error")
+	} else if in.Name == "grpc-error" {
+		return nil, status.New(codes.NotFound, "resource not found").Err()
+	}
 	return &pb.HelloReply{Message: "Hello " + in.Name}, nil
 }
 
