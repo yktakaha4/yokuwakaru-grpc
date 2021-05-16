@@ -6,7 +6,9 @@ import (
 	"log"
 	"net"
 
+	"github.com/golang/protobuf/ptypes/duration"
 	pb "github.com/yktakaha4/yokuwakaru-grpc"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -20,7 +22,16 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 		return nil, errors.New("test error")
 	} else if in.Name == "grpc-error" {
 		return nil, status.New(codes.NotFound, "resource not found").Err()
+	} else if in.Name == "grpc-error-details" {
+		st, _ := status.New(codes.Aborted, "aborted").WithDetails(&errdetails.RetryInfo{
+			RetryDelay: &duration.Duration{
+				Seconds: 3,
+				Nanos:   0,
+			},
+		})
+		return nil, st.Err()
 	}
+
 	return &pb.HelloReply{Message: "Hello " + in.Name}, nil
 }
 
