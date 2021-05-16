@@ -24,9 +24,18 @@ func main() {
 
 	name := os.Args[1]
 
-	md := metadata.Pairs("timestapmp", time.Now().Format(time.Stamp))
-	ctx := context.Background()
-	ctx = metadata.NewOutgoingContext(ctx, md)
+	md := metadata.Pairs("timestamp", time.Now().Format(time.Stamp))
+	basectx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	if name == "cancel" {
+		go func() {
+			time.Sleep(1 * time.Second)
+			cancel()
+		}()
+	}
+
+	ctx := metadata.NewOutgoingContext(basectx, md)
 	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name}, grpc.Trailer(&md))
 	if err != nil {
 		s, ok := status.FromError(err)
