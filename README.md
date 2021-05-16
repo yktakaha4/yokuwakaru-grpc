@@ -24,11 +24,16 @@ exit status 1
 make: *** [Makefile:9: client] エラー 1
 ```
 
+証明書作成
+
+- 必要要件
+    - certstrap
+
 ```
 $ certstrap init --common-name ca
 $ certstrap request-cert --domain localhost
 $ certstrap sign localhost --CA ca
 
-$ cp -vp out/localhost.{crt,key} hello-grpc/server
-$ ln -s $PWD/hello-grpc/server/localhost.crt $PWD/hello-grpc/client/localhost.crt
+$ cp -vp "$PWD/out/"localhost.{crt,key} "$PWD/hello-grpc/server"
+$ ln -s "$PWD/hello-grpc/server/localhost.crt" "$PWD/hello-grpc/client/localhost.crt"
 ```
