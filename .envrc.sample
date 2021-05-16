@@ -1,0 +1,2 @@
+# export GODEBUG=http2debug=2
+# export GRPC_GO_LOG_SEVERITY_LEVEL=info
